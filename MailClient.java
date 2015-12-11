@@ -13,15 +13,18 @@ public class MailClient
     private String user;
     //Variable que guarda el ultimo mensaje.
     private MailItem lastMail;
+    //Variable que guarda si el mensaje es spam o no.
+    private boolean spamMail;
 
     /**
      * Constructor for objects of class MailClient
      */
     public MailClient(String user, MailServer server)
     {
-        this.server = new MailServer();
         this.server = server;
         this.user = user;
+        this.lastMail = null;
+        this.spamMail = false;
     }
 
     /**
@@ -29,25 +32,39 @@ public class MailClient
      */
     public MailItem getNextMailItem()
     {
-        MailItem mensaje3 = server.getNextMailItem(user);
-        lastMail = mensaje3;
-        return lastMail;
+        MailItem email = server.getNextMailItem(user);
+        if(email.getMessage().contains("Trabajo")){
+            lastMail = email;
+        }
+        else if (email.getMessage().contains("Regalo") || email.getMessage().contains("Promoción")){
+            email = null;
+        }
+        else if (email != null) {
+            lastMail = email;
+        }
+        return email;
     }
-    
+
     /**
      * Imprime el siguiente mensaje.
      */
     public void printNextMailItem()
     {
-        MailItem mensaje1 = getNextMailItem();
+        MailItem mensaje1 = server.getNextMailItem(user);
         if (mensaje1 == null){
             System.out.println("No tienes correo nuevo.");
+        }
+        else if(mensaje1.getMessage().contains("Trabajo")){
+            mensaje1.print();
+        }
+        else if (mensaje1.getMessage().contains("Regalo") || mensaje1.getMessage().contains("Promoción")){
+            System.out.println("¡Has recibido Spam!");
         }
         else{
             mensaje1.print();
         }
     }
-    
+
     /**
      * Envia un mensaje a un destinatario mediante el servidor.
      */
@@ -56,7 +73,7 @@ public class MailClient
         MailItem newMessage = new MailItem(user, para, mensaje, asunto);
         server.post(newMessage);
     }
-    
+
     /**
      * Muestra cuantos correos tienes en el servidor.
      */
@@ -64,7 +81,7 @@ public class MailClient
     {
         System.out.println ("Tienes " + server.howManyMailItems(user) + " Mensajes nuevos.");
     }
-    
+
     /**
      * Devuelve un mensaje automaticamente al remitente.
      */
@@ -75,14 +92,15 @@ public class MailClient
             String para = mensaje2.getFrom();
             String mensaje = "Ahora mismo no me encuentro en la oficina. \n" + mensaje2.getMessage();
             String asunto = "RE:" + mensaje2.getSubject();
-            MailItem newMessage = new MailItem(user, para, mensaje, asunto);
-            server.post(newMessage);
+            sendMailItem(para, asunto, mensaje);
+            //MailItem newMessage = new MailItem(user, para, mensaje, asunto);
+            //server.post(newMessage);
         }
         else {
             System.out.println ("No hay mensajes nuevos.");
         }
     }
-    
+
     /**
      * Metodo para imprimir el ultimo mensaje las veces que quieras.
      */
@@ -92,8 +110,8 @@ public class MailClient
             lastMail.print();
         }
         else {
-            System.out.println ("No hay mensajes nuevos.");
+            System.out.println ("No hay mensajes para mostrar.");
         }
     }
-    
+
 }
