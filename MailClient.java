@@ -15,6 +15,16 @@ public class MailClient
     private MailItem lastMail;
     //Variable que guarda si el mensaje es spam o no.
     private boolean spamMail;
+    //Variable para guardar los mensajes recibidos.
+    private int mailsRecibidos;
+    //Variable para guardar los mensajes Spam.
+    private int mailsSpam;
+    //variable que indica si el ultimo mensaje es spam.
+    private boolean spam;
+
+    private int caracteres;
+
+    private String userlrg;
 
     /**
      * Constructor for objects of class MailClient
@@ -24,7 +34,7 @@ public class MailClient
         this.server = server;
         this.user = user;
         this.lastMail = null;
-        this.spamMail = false;
+        this.spam = false;
     }
 
     /**
@@ -32,16 +42,31 @@ public class MailClient
      */
     public MailItem getNextMailItem()
     {
+        spam = false;
         MailItem email = server.getNextMailItem(user);
+        if (email.getMessage().contains("Regalo") || email.getMessage().contains("Promoción")){
+            spam = true;
+        }
+
         if(email.getMessage().contains("Trabajo")){
-            lastMail = email;
-        }
-        else if (email.getMessage().contains("Regalo") || email.getMessage().contains("Promoción")){
+            spam = false;
+        }       
+
+        if (spam == true){
             email = null;
-        }
-        else if (email != null) {
+            mailsSpam = mailsSpam + 1;
+            mailsRecibidos = mailsRecibidos +1;
+        }   
+
+        if(email != null){
+            if(lastMail == null || email.getMessage().length() > lastMail.getMessage().length()){
+                caracteres = email.getMessage().length();
+                userlrg = email.getFrom();            
+            }
             lastMail = email;
+            mailsRecibidos = mailsRecibidos +1;
         }
+
         return email;
     }
 
@@ -50,18 +75,18 @@ public class MailClient
      */
     public void printNextMailItem()
     {
-        MailItem mensaje1 = server.getNextMailItem(user);
-        if (mensaje1 == null){
+        MailItem mensaje1 = getNextMailItem();
+        if (mensaje1 == null && spam == false){
             System.out.println("No tienes correo nuevo.");
         }
-        else if(mensaje1.getMessage().contains("Trabajo")){
-            mensaje1.print();
-        }
-        else if (mensaje1.getMessage().contains("Regalo") || mensaje1.getMessage().contains("Promoción")){
-            System.out.println("¡Has recibido Spam!");
+        else if(mensaje1 == null && spam == true){
+            System.out.println("¡Has recibido spam!");
+            mailsRecibidos = +1;
+            mailsSpam = +1;
         }
         else{
-            mensaje1.print();
+            mensaje1.print();            
+            mailsRecibidos = +1;
         }
     }
 
@@ -112,6 +137,18 @@ public class MailClient
         else {
             System.out.println ("No hay mensajes para mostrar.");
         }
+    }
+
+    /**
+     * Metodo para imprimir el ultimo mensaje las veces que quieras.
+     */
+    public void showStats()
+    {
+        System.out.println("Mensajes recibidos: " + mailsRecibidos);
+        System.out.println("Mensajes de Spam: " + mailsSpam);
+        float porcentajeSpam = (mailsSpam * mailsRecibidos) / 100;
+        System.out.println("Porcentaje de Spam: " + porcentajeSpam);
+        System.out.println("Mensaje mas largo enviado por: " + userlrg + " con el numero de caracteres de: " + caracteres);
     }
 
 }
