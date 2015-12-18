@@ -10,15 +10,18 @@ public class MailItem
     private String to;
     
     private String message;
+    
+    private String subject;
 
     /**
      * Constructor for objects of class MailItem
      */
-    public MailItem(String from, String to, String message)
+    public MailItem(String from, String to, String message, String subject)
     {
         this.from = from;
         this.to = to;
         this.message = message;
+        this.subject = subject;
     }
 
     /**
@@ -38,6 +41,14 @@ public class MailItem
     }
     
     /**
+     * Metodo que devuelve el asunto.
+     */
+    public String getSubject()
+    {
+        return subject;
+    }
+    
+    /**
      * Metodo que devuelve el mensaje.
      */
     public String getMessage()
@@ -52,6 +63,7 @@ public class MailItem
     {
         System.out.println("From: " + from);
         System.out.println("To: " + to);
+        System.out.println("Subject: " + subject);
         System.out.println("Message: " + message);
     }
 }

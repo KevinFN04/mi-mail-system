@@ -48,9 +48,9 @@ public class MailClient
     /**
      * Envia un mensaje a un destinatario mediante el servidor.
      */
-    public void sendMailItem(String para, String mensaje)
+    public void sendMailItem(String para, String asunto, String mensaje)
     {
-        MailItem newMessage = new MailItem(user, para, mensaje);
+        MailItem newMessage = new MailItem(user, para, mensaje, asunto);
         server.post(newMessage);
     }
 }
