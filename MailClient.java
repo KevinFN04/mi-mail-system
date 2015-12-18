@@ -16,11 +16,11 @@ public class MailClient
     /**
      * Constructor for objects of class MailClient
      */
-    public MailClient(String usuario, MailServer servidor1)
+    public MailClient(String user, MailServer server)
     {
-        server = new MailServer();
-        server = servidor1;
-        user = usuario;
+        this.server = new MailServer();
+        this.server = server;
+        this.user = user;
     }
 
     /**
