@@ -53,4 +53,9 @@ public class MailClient
         MailItem newMessage = new MailItem(user, para, mensaje, asunto);
         server.post(newMessage);
     }
+    
+    public void printHowManyMailItems()
+    {
+        System.out.println ("Tienes " + server.howManyMailItems(user) + " Mensajes nuevos.");
+    }
 }
