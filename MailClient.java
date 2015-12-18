@@ -54,8 +54,13 @@ public class MailClient
         server.post(newMessage);
     }
     
+    /**
+     * Muestra cuantos correos tienes en el servidor.
+     */
     public void printHowManyMailItems()
     {
         System.out.println ("Tienes " + server.howManyMailItems(user) + " Mensajes nuevos.");
     }
+    
+    
 }
