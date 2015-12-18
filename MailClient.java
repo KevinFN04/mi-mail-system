@@ -7,11 +7,12 @@
  */
 public class MailClient
 {
-    
+    //Variable que guarda el servidor.
     private MailServer server;
-    
+    //Variable que guarda el usuario.
     private String user;
-    
+    //Variable que guarda el ultimo mensaje.
+    private MailItem lastMail;
 
     /**
      * Constructor for objects of class MailClient
@@ -28,7 +29,9 @@ public class MailClient
      */
     public MailItem getNextMailItem()
     {
-        return server.getNextMailItem(user);
+        MailItem mensaje3 = server.getNextMailItem(user);
+        lastMail = mensaje3;
+        return lastMail;
     }
     
     /**
@@ -79,4 +82,18 @@ public class MailClient
             System.out.println ("No hay mensajes nuevos.");
         }
     }
+    
+    /**
+     * Metodo para imprimir el ultimo mensaje las veces que quieras.
+     */
+    public void printLastMessage()
+    {
+        if (lastMail != null){
+            lastMail.print();
+        }
+        else {
+            System.out.println ("No hay mensajes nuevos.");
+        }
+    }
+    
 }

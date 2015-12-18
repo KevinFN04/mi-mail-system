@@ -4,13 +4,13 @@
  */
 public class MailItem
 {
-    
+    //Variable que guarda el emisor.
     private String from;
-    
+    //Variable que guarda el destinatario.
     private String to;
-    
+    //Variable que guarda el mensaje.
     private String message;
-    
+    //Variable que guarda el asunto.
     private String subject;
 
     /**
