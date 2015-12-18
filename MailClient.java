@@ -62,5 +62,21 @@ public class MailClient
         System.out.println ("Tienes " + server.howManyMailItems(user) + " Mensajes nuevos.");
     }
     
-    
+    /**
+     * Devuelve un mensaje automaticamente al remitente.
+     */
+    public void getNextMailItemAndSendAutomaticRespond()
+    {
+        MailItem mensaje2 = getNextMailItem();
+        if (mensaje2 != null){
+            String para = mensaje2.getFrom();
+            String mensaje = "Ahora mismo no me encuentro en la oficina. \n" + mensaje2.getMessage();
+            String asunto = "RE:" + mensaje2.getSubject();
+            MailItem newMessage = new MailItem(user, para, mensaje, asunto);
+            server.post(newMessage);
+        }
+        else {
+            System.out.println ("No hay mensajes nuevos.");
+        }
+    }
 }
